@@ -27,6 +27,8 @@ dotfiles/
 │       ├── tmux-pane-status.sh
 │       ├── tmux-window-status.sh
 │       └── tmux-pane-colors.sh
+├── hammerspoon/
+│   └── init.lua                      # → ~/.hammerspoon/init.lua
 ├── tmux/
 │   └── .tmux.conf                    # → ~/.tmux.conf
 ├── gh/
@@ -75,6 +77,10 @@ git clone git@github.com:rioping/dotfiles.git ~/dev/dotfiles
 | 入力待ち | 💬 | `#fab387` オレンジ |
 | 許可待ち | 🛑 | `#f38ba8` レッド |
 | 起動中 | 🚀 | `#89b4fa` ブルー |
+
+## Hammerspoon
+
+マウスドラッグ終了時に `Cmd+C` を自動送信し、全アプリで「選択即コピー」を実現。Terminal.app は除外（tmux の `MouseDragEnd` + `pbcopy` と競合するため）。
 
 ## statusline 表示
 

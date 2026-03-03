@@ -33,6 +33,7 @@ DIRS=(
   "claude/hooks:$HOME/.claude/hooks"
   "claude/scripts:$HOME/.claude/scripts"
   "bin:$HOME/bin"
+  "hammerspoon:$HOME/.hammerspoon"
   "launchagents:$HOME/Library/LaunchAgents"
 )
 
