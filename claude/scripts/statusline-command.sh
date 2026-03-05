@@ -13,18 +13,27 @@ else
   ctx_display="ctx:--"
 fi
 
-# --- Usage limits (from API, cached 60s) ---
+# --- Usage limits (from API, cached 120s / retry after 300s on failure) ---
 CACHE_FILE="/tmp/claude-usage-cache.json"
-CACHE_MAX_AGE=60
+CACHE_LOCK="/tmp/claude-usage-cache.lock"
+CACHE_MAX_AGE=120
+LOCK_MAX_AGE=300
 
-# Refresh cache in background if stale (never blocks display)
+# Determine if we should attempt an API call
+should_fetch=false
+now=$(date +%s)
+
 if [ -f "$CACHE_FILE" ]; then
-  cache_age=$(( $(date +%s) - $(stat -f %m "$CACHE_FILE" 2>/dev/null || echo 0) ))
+  cache_age=$(( now - $(stat -f %m "$CACHE_FILE" 2>/dev/null || echo 0) ))
+  [ "$cache_age" -ge "$CACHE_MAX_AGE" ] && should_fetch=true
+elif [ -f "$CACHE_LOCK" ]; then
+  lock_age=$(( now - $(stat -f %m "$CACHE_LOCK" 2>/dev/null || echo 0) ))
+  [ "$lock_age" -ge "$LOCK_MAX_AGE" ] && should_fetch=true
 else
-  cache_age=$((CACHE_MAX_AGE + 1))
+  should_fetch=true
 fi
 
-if [ "$cache_age" -ge "$CACHE_MAX_AGE" ]; then
+if [ "$should_fetch" = true ]; then
   (
     token=$(security find-generic-password -s "Claude Code-credentials" -a "$(whoami)" -w 2>/dev/null | jq -r '.claudeAiOauth.accessToken // empty' 2>/dev/null)
     if [ -n "$token" ]; then
@@ -34,7 +43,12 @@ if [ "$cache_age" -ge "$CACHE_MAX_AGE" ]; then
         "https://api.anthropic.com/api/oauth/usage" 2>/dev/null)
       if echo "$resp" | jq -e '.five_hour' >/dev/null 2>&1; then
         echo "$resp" > "$CACHE_FILE"
+        rm -f "$CACHE_LOCK"
+      else
+        touch "$CACHE_LOCK"
       fi
+    else
+      touch "$CACHE_LOCK"
     fi
   ) &
 fi
