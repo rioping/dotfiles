@@ -88,7 +88,6 @@
  git clone git@github.com:rioping/tennis-court-sniper-bot.git
  git clone git@github.com:rioping/wework-invitation-bot.git
  git clone git@github.com:rioping/openclaw.git
- git clone git@github.com:rioping/claude_setting.git
 
  各プロジェクトで pnpm install / npm install を実行して依存関係を再構築。
 
