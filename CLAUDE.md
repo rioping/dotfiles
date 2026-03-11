@@ -86,6 +86,12 @@ git clone git@github.com:rioping/dotfiles.git ~/dev/dotfiles
 
 [cc-statusline](https://github.com/chongdashu/cc-statusline) ベースのカスタム版。コンテキスト使用率、コスト、バーンレート、Git ブランチ、モデル名を表示。セッション使用率は Anthropic API (`/api/oauth/usage`) から直接取得（成功時 180 秒、失敗時 600 秒のキャッシュ）。
 
+## テンプレート変数
+
+`install.sh` はデプロイ時にファイル内の `__HOME__` を実際の `$HOME` に置換する。シェルスクリプト（`.zshrc` 等）は直接 `$HOME` を使い、plist 等シェル展開できないファイルは `__HOME__` プレースホルダーを使うこと。
+
+対象環境: ryojiokuda (MacBook Air) / rioping (Mac mini)
+
 ## 追跡しないもの
 
 - `~/.claude/settings.local.json` — 自動生成の許可リスト
