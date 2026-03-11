@@ -54,9 +54,9 @@ deploy_file() {
   if $DRY_RUN; then
     if [ -f "$dest" ]; then
       if diff -q "$src" "$dest" >/dev/null 2>&1; then
-        echo "  [OK]   $dest（変更なし）"
+        echo "  [OK]   ${dest}（変更なし）"
       else
-        echo "  [DIFF] $src → $dest（差分あり）"
+        echo "  [DIFF] ${src} → ${dest}（差分あり）"
       fi
     else
       echo "  [NEW]  $src → $dest"
@@ -70,14 +70,15 @@ deploy_file() {
   # 既存ファイルのバックアップ
   if [ -f "$dest" ]; then
     if diff -q "$src" "$dest" >/dev/null 2>&1; then
-      echo "  [OK]   $dest（変更なし）"
+      echo "  [OK]   ${dest}（変更なし）"
       return
     fi
     cp "$dest" "${dest}.bak"
     echo "  [BAK]  $dest → ${dest}.bak"
   fi
 
-  cp "$src" "$dest"
+  # テンプレート変数の置換（__HOME__ → 実際のホームディレクトリ）
+  sed "s|__HOME__|$HOME|g" "$src" > "$dest"
   echo "  [COPY] $src → $dest"
 }
 
@@ -137,7 +138,7 @@ if [ -f "$DOTFILES_DIR/Brewfile" ]; then
     echo "  [DRY-RUN] brew bundle install --file=$DOTFILES_DIR/Brewfile"
   else
     echo "  brew bundle install を実行します..."
-    brew bundle install --file="$DOTFILES_DIR/Brewfile" --no-lock
+    brew bundle install --file="$DOTFILES_DIR/Brewfile"
   fi
 else
   echo "  [SKIP] Brewfile が見つかりません"

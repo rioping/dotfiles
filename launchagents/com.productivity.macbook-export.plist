@@ -6,8 +6,8 @@
     <string>com.productivity.macbook-export</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/ryojiokuda/dev/productivity/.venv/bin/python3</string>
-        <string>/Users/ryojiokuda/dev/productivity/scripts/macbook_export.py</string>
+        <string>__HOME__/dev/productivity/.venv/bin/python3</string>
+        <string>__HOME__/dev/productivity/scripts/macbook_export.py</string>
     </array>
     <key>StartInterval</key>
     <integer>60</integer>
